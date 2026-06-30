@@ -1,4 +1,4 @@
-const { DataTypes, STRING } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const dbConnection = require('../db')
 
 // TODO: Workshop Part 2: add one key per field below, each set to a DataTypes type

@@ -6,7 +6,7 @@ const cors = require("cors");
 const db = require('./db/index')
 // TODO: Workshop Part 2: import your Book model from ./models/Book once it's defined.
 // db.authenticate().then(() => console.log("DB connected")).catch(console.error)
-const Book = require('./models/book')
+const { Book, Review } = require('./models/index')
 
 const app = express();
 const PORT = 8080;
@@ -54,16 +54,14 @@ app.get("/api/books", async (request, response, next) => {
 app.get("/api/books/:id", async (request, response, next) => {
   try {
     const id = Number(request.params.id); // request.params.id is always a string — Number() makes it comparable
-    // const book = books.find((b) => b.id === id);
+    const matchedBook = await Book.findByPk(id, {
+      include: Review
+    })
 
-    // if (!book) {
-    //   return response.sendStatus(404);
-    // }
-    const matchedBook = await Book.findByPk(id)
     if(!matchedBook) {
       return response.sendStatus(404);
     }
-    response.json(book);
+    response.json(matchedBook);
   } catch (error) {
     next(error);
   }
@@ -109,6 +107,21 @@ app.patch("/api/books/:id", async (request, response, next) => {
     next(error);
   }
 });
+
+app.post('/api/books/:bookId/reviews', async (req, res) => {
+
+  const id = req.params.bookId
+
+  const review = {
+    reviewer: req.body.reviewer,
+    rating: req.body.rating,
+    comment: req.body.comment,
+    bookId: id,
+  }
+
+  await Review.create(review)
+  res.status(201).json(review)
+})
 
 // Part 7: DELETE a book
 // TODO: Workshop: find the book first, same as above, then call the instance
