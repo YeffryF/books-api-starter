@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, STRING } = require('sequelize');
 const dbConnection = require('../db')
 
 // TODO: Workshop Part 2: add one key per field below, each set to a DataTypes type
@@ -9,7 +9,11 @@ const dbConnection = require('../db')
 //   publishedYear  INTEGER
 //   available      BOOLEAN  defaults to true
 const Book = dbConnection.define('book', {
-
+    title: { type: DataTypes.STRING, allowNull: false },
+    author: { type: DataTypes.STRING, allowNull: false },
+    genre: { type: DataTypes.STRING },
+    publicedYea: { type: DataTypes.INTEGER },
+    available: { type: DataTypes.BOOLEAN }
 })
 
 module.exports = Book
